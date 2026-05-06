@@ -6,9 +6,9 @@ window.onload = function() {
 
 async function updateParanaqueTime() {
   try {
-    const response = await fetch('http://worldtimeapi.org/api/timezone/Asia/Manila');
+    const response = await fetch('https://timeapi.io/api/Time/current/zone?timeZone=Asia/Manila');
     const data = await response.json();
-    const paranaqueTime = new Date(data.datetime);
+    const paranaqueTime = new Date(data.dateTime);
     const timeString = paranaqueTime.toLocaleTimeString("en-US", {
       hour12: true,
       hour: "numeric",
