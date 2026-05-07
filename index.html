@@ -5,16 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paranaque</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
 </head>
+<body>
 
 <nav>
-  <a href="#">Home</a>
-  <a href="#">Education</a>
-  <a href="#">Health</a>
-  <a href="#">Infrastructure</a>
-  <a href="#">Social Services</a>
-  <a href="#">Economy</a>
+  <a href="#home">Home</a>
+  <a href="#education">Education</a>
+  <a href="#health">Health</a>
+  <a href="#infrastructure">Infrastructure</a>
 </nav>
 
 
@@ -24,8 +22,32 @@
         <div id="paranaque-time" class="time-display">Loading time...</div>
     </div>
 
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
+    <div class="container">
 
+        <h1>Local Government Budget Transparency System</h1>
+
+        <!-- Education -->
+        <div class="chart-box">
+            <h2>Education Budget</h2>
+            <canvas id="educationChart"></canvas>
+        </div>
+
+        <!-- Health -->
+        <div class="chart-box">
+            <h2>Health Budget</h2>
+            <canvas id="healthChart"></canvas>
+        </div>
+
+        <!-- Infrastructure -->
+        <div class="chart-box">
+            <h2>Infrastructure Budget</h2>
+            <canvas id="infraChart"></canvas>
+        </div>
+
+    </div>
 
 
 
@@ -47,16 +69,6 @@
     <section id="infrastructure">
         <h2>Infrastructure</h2>
         <p>The infrastructure section provides information about the city's development projects and improvements. The city has been investing in upgrading its roads, bridges, and public facilities to enhance the quality of life for its residents. The budget allocation for the infrastructure sector in 2026 is Php. 4,500,000,000 Billion.</p>
-    </section>
-
-    <section id="social">
-        <h2>Social Services</h2>
-        <p>The social services section provides information about the city's programs and initiatives aimed at supporting its residents. These include assistance for vulnerable populations, community development projects, and social welfare programs. The budget allocation for social services in 2026 is Php. 4,500,000,000 Billion.</p>
-    </section>
-
-    <section id="economy">
-        <h2>Economy</h2>
-        <p>The economy section provides information about the city's economic initiatives and programs. The city has been focusing on promoting economic growth and development through various projects and investments. The budget allocation for the economy sector in 2026 is Php. 200,000,000 Million.</p>
     </section>
 
     <section id="developers" class="developers-section">
@@ -84,8 +96,6 @@
             </div>
         </div>
     </section>
-</body>
-</html>
 
    
 
@@ -107,6 +117,7 @@
         </div>
     </footer>
 
+<script src="script.js"></script>
 </body>
 </html>
 
