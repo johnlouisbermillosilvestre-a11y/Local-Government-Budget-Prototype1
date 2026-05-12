@@ -169,7 +169,7 @@ function createBudgetChart(canvasId, title, points) {
               let label = context.dataset.label || '';
               let val = context.raw;
               if (typeof val === 'object') val = val.y;
-              return `${label}: ₱${val} M`;
+              return `${label}: ₱${val} B`;
             }
           }
         }
@@ -199,7 +199,7 @@ function createBudgetChart(canvasId, title, points) {
         y: {
           title: {
             display: true,
-            text: 'Budget (₱ Millions)',
+            text: 'Budget (₱ Billions)',
             color: '#145f33',
             font: { weight: 'bold', size: 12 }
           },
@@ -234,33 +234,168 @@ function createBudgetChart(canvasId, title, points) {
 
 // ======================== BUDGET DATA (Realistic 2024-2026 projections) ========================
 const educationPoints = [
-  { x: 2024, y: 420 },
-  { x: 2025, y: 485 },
-  { x: 2026, y: 575 }
+  { x: 2024, y: 3.71 },
+  { x: 2025, y: 4.43 },
+  { x: 2026, y: 0.525 }
 ];
 
 const healthPoints = [
-  { x: 2024, y: 380 },
-  { x: 2025, y: 445 },
-  { x: 2026, y: 530 }
+  { x: 2024, y: 0.24631 },
+  { x: 2025, y: 0.22433 },
+  { x: 2026, y: 0.275 }
 ];
 
 const infraPoints = [
-  { x: 2024, y: 610 },
-  { x: 2025, y: 720 },
-  { x: 2026, y: 850 }
+  { x: 2024, y: 1.52 },
+  { x: 2025, y: 3.20 },
+  { x: 2026, y: 3.75 }
 ];
+
+const overallComparisonData = {
+  labels: [2024, 2025, 2026],
+  datasets: [
+    {
+      label: 'Education',
+      data: [3.71, 4.43, 0.525],
+      borderColor: '#145f33',
+      backgroundColor: '#145f33',
+      tension: 0.3,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+    },
+    {
+      label: 'Health',
+      data: [0.24631, 0.22433, 0.275],
+      borderColor: '#2d6f8f',
+      backgroundColor: '#2d6f8f',
+      tension: 0.3,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+    },
+    {
+      label: 'Infrastructure',
+      data: [1.52, 3.20, 3.75],
+      borderColor: '#ff7f11',
+      backgroundColor: '#ff7f11',
+      tension: 0.3,
+      pointRadius: 6,
+      pointHoverRadius: 8,
+    }
+  ]
+};
+
+function createComparisonChart(canvasId, data, title) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) {
+    console.warn(`Canvas with id "${canvasId}" not found`);
+    return null;
+  }
+
+  const ctx = canvas.getContext('2d');
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.labels,
+      datasets: data.datasets
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'top',
+          labels: {
+            color: '#1f4d2e',
+            font: { size: 12, weight: '500' }
+          }
+        },
+        title: {
+          display: true,
+          text: title,
+          color: '#145f33',
+          font: { size: 16, weight: '700' }
+        },
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          callbacks: {
+            label: function(context) {
+              const value = context.raw;
+              return `${context.dataset.label}: ₱${value} B`;
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Year',
+            color: '#145f33',
+            font: { weight: 'bold', size: 12 }
+          },
+          ticks: {
+            color: '#2b5a3b'
+          },
+          grid: {
+            color: '#cfe3c4'
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Budget (₱ Billions)',
+            color: '#145f33',
+            font: { weight: 'bold', size: 12 }
+          },
+          ticks: {
+            color: '#2b5a3b',
+            callback: function(value) { return '₱' + value; }
+          },
+          grid: {
+            color: '#ddecd2'
+          },
+          beginAtZero: true
+        }
+      }
+    }
+  });
+}
 
 // ======================== INITIALIZE ALL CHARTS ========================
 function initAllCharts() {
   createBudgetChart('educationChart', 'Education Budget', educationPoints);
   createBudgetChart('healthChart', 'Health Budget', healthPoints);
   createBudgetChart('infraChart', 'Infrastructure Budget', infraPoints);
+  createComparisonChart('overallChart', overallComparisonData, 'Overall Budget Comparison 2024–2026');
 }
 
 // ======================== NAVIGATION (smooth scroll) ========================
 function initNavigation() {
-  const navLinks = document.querySelectorAll('nav a');
+  const navLinks = document.querySelectorAll('.nav-item');
+  const navLinksContainer = document.querySelector('.nav-links');
+  const navToggle = document.querySelector('.nav-toggle');
+  const sections = document.querySelectorAll('.page-section');
+
+  function setActiveLink(id) {
+    navLinks.forEach(link => {
+      const target = link.getAttribute('href').substring(1);
+      link.classList.toggle('active', target === id);
+    });
+  }
+
+  function toggleMenu() {
+    if (navLinksContainer) {
+      navLinksContainer.classList.toggle('is-open');
+    }
+  }
+
+  function closeMenu() {
+    if (navLinksContainer) {
+      navLinksContainer.classList.remove('is-open');
+    }
+  }
+
   navLinks.forEach(link => {
     link.addEventListener('click', function(e) {
       e.preventDefault();
@@ -268,14 +403,32 @@ function initNavigation() {
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
         targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      } else if (targetId === 'education' || targetId === 'health' || targetId === 'infrastructure') {
-        const cardSection = document.getElementById(targetId);
-        if (cardSection) cardSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveLink(targetId);
+        closeMenu();
       }
     });
   });
-  
-  // City image interactive click alert
+
+  if (navToggle) {
+    navToggle.addEventListener('click', function() {
+      toggleMenu();
+    });
+  }
+
+  function updateActiveSection() {
+    let current = 'home';
+    sections.forEach(section => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top <= window.innerHeight * 0.35) {
+        current = section.id;
+      }
+    });
+    setActiveLink(current);
+  }
+
+  window.addEventListener('scroll', updateActiveSection);
+  updateActiveSection();
+
   const cityImg = document.querySelector('.city-image');
   if (cityImg) {
     cityImg.addEventListener('click', function() {
